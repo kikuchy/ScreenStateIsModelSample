@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context="net.kikuchy.loaddatas.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_ring"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/refresh"
+        app:layout_constraintEnd_toEndOf="@+id/refresh"
+        app:layout_constraintStart_toStartOf="@+id/refresh"
+        tools:visibility="visible" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="0dp"

@@ -22,7 +22,7 @@ class StargazerAlertPresenter(private val parentView: View) : Observer<Stargazer
                 when (lastResult) {
                     is Result.Failure ->
                         Snackbar
-                                .make(parentView, lastResult.error.message ?: "Error", Snackbar.LENGTH_INDEFINITE)
+                                .make(parentView, "読み込み中にエラーが起きました", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("再読み込み") {
                                     callback?.invoke()
                                 }

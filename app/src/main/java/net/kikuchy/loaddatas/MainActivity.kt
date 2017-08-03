@@ -2,14 +2,12 @@ package net.kikuchy.loaddatas
 
 import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModelProviders
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.widget.ProgressBar
 import net.kikuchy.loaddatascore.stargazer.list.StargazerListModelState
 
 class MainActivity : LifecycleActivity() {
@@ -26,8 +24,16 @@ class MainActivity : LifecycleActivity() {
         findViewById<SwipeRefreshLayout>(R.id.refresh)
     }
 
-    val alert: StargazerAlertPresenter by lazy {
+    val alertPresenter: StargazerAlertPresenter by lazy {
         StargazerAlertPresenter(refreshLayout)
+    }
+
+    val progressRing: ProgressBar by lazy {
+        findViewById<ProgressBar>(R.id.progress_ring)
+    }
+
+    val loadingPresenter: StargazerNextLoadingPresenter by lazy {
+        StargazerNextLoadingPresenter(progressRing)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +44,8 @@ class MainActivity : LifecycleActivity() {
 
         val vm = ViewModelProviders.of(this).get(StargazerListViewModel::class.java)
         vm.state.observe(this, adapter)
+        vm.state.observe(this, alertPresenter)
+        vm.state.observe(this, loadingPresenter)
         vm.state.observe(this, Observer { state ->
             when (state) {
                 is StargazerListModelState.Fetched -> refreshLayout.isRefreshing = false
@@ -51,7 +59,7 @@ class MainActivity : LifecycleActivity() {
         refreshLayout.setOnRefreshListener {
             vm.reload()
         }
-        alert.callback = {
+        alertPresenter.callback = {
             vm.reload()
         }
     }
