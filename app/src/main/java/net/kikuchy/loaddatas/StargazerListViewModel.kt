@@ -13,7 +13,7 @@ import net.kikuchy.loaddatascore.stargazer.network.StargazerNetworkModel
 import java.net.URI
 
 /**
- * Created by hiroshi.kikuchi on 2017/08/02.
+ * Modelを公開したり、Modelへの司令を仲介するやつ。ライフサイクルの影響を受けたくないので使用。
  */
 class StargazerListViewModel : ViewModel() {
     val model = StargazerListModel(

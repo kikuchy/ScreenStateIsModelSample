@@ -13,7 +13,7 @@ import net.kikuchy.loaddatascore.stargazer.Stargazer
 import net.kikuchy.loaddatascore.stargazer.list.StargazerListModelState
 
 /**
- * Created by hiroshi.kikuchi on 2017/08/02.
+ * リストの内容を生成するやつ
  */
 class StargazerListAdapter(
         context: Context

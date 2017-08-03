@@ -26,6 +26,10 @@ class MainActivity : LifecycleActivity() {
         findViewById<SwipeRefreshLayout>(R.id.refresh)
     }
 
+    val alert: StargazerAlertPresenter by lazy {
+        StargazerAlertPresenter(refreshLayout)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,6 +49,9 @@ class MainActivity : LifecycleActivity() {
             }
         }))
         refreshLayout.setOnRefreshListener {
+            vm.reload()
+        }
+        alert.callback = {
             vm.reload()
         }
     }
