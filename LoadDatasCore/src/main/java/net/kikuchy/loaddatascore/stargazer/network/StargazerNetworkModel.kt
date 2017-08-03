@@ -1,6 +1,8 @@
 package net.kikuchy.loaddatascore.stargazer.network
 
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import net.kikuchy.loaddatascore.Result
 import net.kikuchy.loaddatascore.api.StargazerRepositoryContract
@@ -33,10 +35,13 @@ class StargazerNetworkModel(
     }
 
     private fun loadImpl(page: Int) {
-        repository.getStargazers(page).subscribe({ stargazers ->
-            stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers)))
-        }, { error ->
-            stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Failure(error)))
-        })
+        repository.
+                getStargazers(page)
+                .observeOn(Schedulers.computation())
+                .subscribe({ stargazers ->
+                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers.data)))
+                }, { error ->
+                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Failure(error)))
+                })
     }
 }

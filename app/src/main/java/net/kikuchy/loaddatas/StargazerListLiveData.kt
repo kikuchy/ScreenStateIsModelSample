@@ -1,6 +1,7 @@
 package net.kikuchy.loaddatas
 
 import android.arch.lifecycle.LiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import net.kikuchy.loaddatascore.Result
 import net.kikuchy.loaddatascore.stargazer.Stargazer
@@ -29,7 +30,7 @@ class StargazerListLiveData(
         super.onActive()
 
         disposeBag.add(
-                model.stateChanged.subscribe({ state ->
+                model.stateChanged.observeOn(AndroidSchedulers.mainThread()).subscribe({ state ->
                     value = state
                 })
         )

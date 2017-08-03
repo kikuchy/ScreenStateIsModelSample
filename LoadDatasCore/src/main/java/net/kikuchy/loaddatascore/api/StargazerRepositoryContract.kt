@@ -7,5 +7,5 @@ import net.kikuchy.loaddatascore.stargazer.Stargazer
  * Created by hiroshi.kikuchi on 2017/08/02.
  */
 interface StargazerRepositoryContract {
-    fun getStargazers(page: Int): Single<List<Stargazer>>
+    fun getStargazers(page: Int): Single<Cursor<List<Stargazer>>>
 }
