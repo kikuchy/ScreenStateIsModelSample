@@ -26,4 +26,8 @@ class StargazerListViewModel : ViewModel() {
     fun loadNext() {
         model.loadNext()
     }
+
+    fun reload() {
+        model.reload()
+    }
 }

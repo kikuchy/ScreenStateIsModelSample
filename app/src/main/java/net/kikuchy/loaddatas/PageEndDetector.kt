@@ -10,7 +10,7 @@ class PageEndDetector(val callback: OnReachPageEnd) : RecyclerView.OnScrollListe
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        val bottomOffset = 50
+        val bottomOffset = 600
 
         if (dy > 0 && recyclerView.computeVerticalScrollRange() - bottomOffset <= recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent()) {
             callback.onReach()
