@@ -25,7 +25,7 @@ class StargazerListModel(
                 is StargazerNetworkModelState.Fetched -> {
                     val newGazers = state.result
                     stateHolder.onNext(
-                            StargazerListModelState.Fetched(prev.page, newGazers.mapSuccess { prev.stargazers + it })
+                            StargazerListModelState.Fetched(prev.page, newGazers.mapSuccess { prev.stargazers + it.data }, newGazers.unwrapped.isPageEnd)
                     )
                     // TODO: 今までの結果保持どうするか考える
                 }
@@ -45,14 +45,14 @@ class StargazerListModel(
         when (v) {
             is StargazerListModelState.NeverFetched -> {
                 stateHolder.onNext(
-                        StargazerListModelState.Fetching(v.page + 1, Result.Success(listOf()))
+                        StargazerListModelState.Fetching(v.page + 1, Result.Success(listOf()), false)
                 )
                 networkModel.load(v.page + 1)
             }
             is StargazerListModelState.Fetching -> return
-            is StargazerListModelState.Fetched -> {
+            is StargazerListModelState.Fetched -> if (!v.isPageEnd) {
                 stateHolder.onNext(
-                        StargazerListModelState.Fetching(v.page + 1, v.lastResult)
+                        StargazerListModelState.Fetching(v.page + 1, v.lastResult, false)
                 )
                 networkModel.load(v.page + 1)
             }

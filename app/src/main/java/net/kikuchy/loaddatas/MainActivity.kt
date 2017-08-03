@@ -35,7 +35,8 @@ class MainActivity : LifecycleActivity() {
             when (state) {
                 is StargazerListModelState.Fetched -> {
                     Log.d("Hoge", state.lastResult.toString())
-                    adapter.stargazers.addAll(state.lastResult.unwrapped)
+                    adapter.stargazers.clear()
+                    adapter.stargazers.addAll(state.stargazers)
                     adapter.notifyDataSetChanged()
                 }
             }

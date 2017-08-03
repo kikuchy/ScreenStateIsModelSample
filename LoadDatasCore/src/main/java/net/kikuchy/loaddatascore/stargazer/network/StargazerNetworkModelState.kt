@@ -1,6 +1,7 @@
 package net.kikuchy.loaddatascore.stargazer.network
 
 import net.kikuchy.loaddatascore.Result
+import net.kikuchy.loaddatascore.api.Cursor
 import net.kikuchy.loaddatascore.stargazer.Stargazer
 
 /**
@@ -12,5 +13,5 @@ sealed class StargazerNetworkModelState {
     /** 読み込み中 */
     object Fetching : StargazerNetworkModelState()
     /** 読み込みが終わって結果が出た */
-    data class Fetched(val result: Result<List<Stargazer>, Throwable>) : StargazerNetworkModelState()
+    data class Fetched(val result: Result<Cursor<List<Stargazer>>, Throwable>) : StargazerNetworkModelState()
 }

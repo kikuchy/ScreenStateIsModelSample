@@ -39,7 +39,7 @@ class StargazerNetworkModel(
                 getStargazers(page)
                 .observeOn(Schedulers.computation())
                 .subscribe({ stargazers ->
-                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers.data)))
+                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers)))
                 }, { error ->
                     stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Failure(error)))
                 })

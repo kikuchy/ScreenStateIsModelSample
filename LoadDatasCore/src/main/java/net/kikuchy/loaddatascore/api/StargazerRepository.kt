@@ -28,6 +28,11 @@ class StargazerRepository : StargazerRepositoryContract {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
+                        if (response.code() / 100 != 2) {
+                            emitter.onError(IllegalStateException("Request failed: response = $response"))
+                            return
+                        }
+
                         val links = response.
                                 headers("Link").
                                 flatMap { it.trim().split(", ") }.
@@ -37,7 +42,7 @@ class StargazerRepository : StargazerRepositoryContract {
                             jsonParser.fromJson<List<Stargazer>>(this, object : TypeToken<List<Stargazer>>() {}.type)
                         }
                         if (last == null || gazers == null) {
-                            emitter.onError(IllegalStateException("last page index or stargazers are not found"))
+                            emitter.onError(IllegalStateException("last page index or stargazers are not found: body = ${response.body()}"))
                         } else {
                             emitter.onSuccess(Cursor(page, last, gazers))
                         }

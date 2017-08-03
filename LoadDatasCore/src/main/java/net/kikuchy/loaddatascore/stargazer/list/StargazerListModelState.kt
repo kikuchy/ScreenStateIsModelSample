@@ -14,7 +14,8 @@ sealed class StargazerListModelState {
 
     data class Fetching(
             override val page: Int,
-            val lastResult: Result<List<Stargazer>, Throwable>
+            val lastResult: Result<List<Stargazer>, Throwable>,
+            val isPageEnd: Boolean
     ) : StargazerListModelState() {
         override val stargazers: List<Stargazer>
             get() = lastResult.unwrapped
@@ -22,7 +23,8 @@ sealed class StargazerListModelState {
 
     data class Fetched(
             override val page: Int,
-            val lastResult: Result<List<Stargazer>, Throwable>
+            val lastResult: Result<List<Stargazer>, Throwable>,
+            val isPageEnd: Boolean
     ) : StargazerListModelState() {
         override val stargazers: List<Stargazer>
             get() = lastResult.unwrapped
