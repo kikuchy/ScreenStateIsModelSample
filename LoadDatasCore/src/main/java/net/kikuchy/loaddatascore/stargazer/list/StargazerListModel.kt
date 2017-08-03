@@ -3,6 +3,7 @@ package net.kikuchy.loaddatascore.stargazer.list
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import net.kikuchy.loaddatascore.Result
+import net.kikuchy.loaddatascore.fold
 import net.kikuchy.loaddatascore.mapSuccess
 import net.kikuchy.loaddatascore.stargazer.network.StargazerNetworkModelContract
 import net.kikuchy.loaddatascore.stargazer.network.StargazerNetworkModelState
@@ -25,13 +26,16 @@ class StargazerListModel(
                 is StargazerNetworkModelState.Fetched -> {
                     val newGazers = state.result
                     stateHolder.onNext(
-                            StargazerListModelState.Fetched(prev.page, newGazers.mapSuccess { prev.stargazers + it.data }, newGazers.unwrapped.isPageEnd)
+                            StargazerListModelState.Fetched(prev.page, newGazers.mapSuccess { prev.stargazers + it.data }, newGazers.fold({ it.isPageEnd }, { false }))
                     )
+
                     // TODO: 今までの結果保持どうするか考える
                 }
                 is StargazerNetworkModelState.NeverFetched -> return@subscribe
                 is StargazerNetworkModelState.Fetching -> return@subscribe
             }
+        }, { error ->
+            error.printStackTrace()
         })
     }
 

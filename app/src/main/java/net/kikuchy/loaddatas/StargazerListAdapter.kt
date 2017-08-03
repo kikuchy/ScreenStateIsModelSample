@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import net.kikuchy.loaddatascore.Result
 import net.kikuchy.loaddatascore.stargazer.Stargazer
 import net.kikuchy.loaddatascore.stargazer.list.StargazerListModelState
 
@@ -41,7 +42,21 @@ class StargazerListAdapter(
         t ?: return
 
         stargazers.clear()
-        stargazers.addAll(t.stargazers)
+        when (t) {
+            is StargazerListModelState.NeverFetched -> stargazers.clear()
+            is StargazerListModelState.Fetching -> {
+                val result = t.lastResult
+                when (result) {
+                    is Result.Success -> stargazers.addAll(result.value)
+                }
+            }
+            is StargazerListModelState.Fetched -> {
+                val result = t.lastResult
+                when (result) {
+                    is Result.Success -> stargazers.addAll(result.value)
+                }
+            }
+        }
         notifyDataSetChanged()
     }
 
