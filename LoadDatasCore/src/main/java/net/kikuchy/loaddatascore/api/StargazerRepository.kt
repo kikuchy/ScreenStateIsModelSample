@@ -30,7 +30,7 @@ class StargazerRepository : StargazerRepositoryContract {
                     override fun onResponse(call: Call, response: Response) {
                         val links = response.
                                 headers("Link").
-                                flatMap { it.split(", ") }.
+                                flatMap { it.trim().split(", ") }.
                                 map { GithubHeaderParser.parse(it) }
                         val last = links.find { it.rel == GithubHeaderParser.Type.LAST }?.run { this.page }
                         val gazers = response.body()?.string()?.run {
