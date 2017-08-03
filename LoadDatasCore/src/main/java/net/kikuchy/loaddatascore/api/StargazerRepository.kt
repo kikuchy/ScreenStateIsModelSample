@@ -38,13 +38,16 @@ class StargazerRepository : StargazerRepositoryContract {
                                 flatMap { it.trim().split(", ") }.
                                 map { GithubHeaderParser.parse(it) }
                         val last = links.find { it.rel == GithubHeaderParser.Type.LAST }?.run { this.page }
-                        val gazers = response.body()?.string()?.run {
+                        val responseBody = response.body()?.string()
+                        val gazers = responseBody?.run {
                             jsonParser.fromJson<List<Stargazer>>(this, object : TypeToken<List<Stargazer>>() {}.type)
                         }
-                        if (last == null || gazers == null) {
-                            emitter.onError(IllegalStateException("last page index or stargazers are not found: body = ${response.body()}"))
+                        if (gazers == null) {
+                            emitter.onError(IllegalStateException("last page index or stargazers are not found:" +
+                                    " header = ${response.headers()}" +
+                                    " body = $responseBody"))
                         } else {
-                            emitter.onSuccess(Cursor(page, last, gazers))
+                            emitter.onSuccess(Cursor(page, last ?: page, gazers))
                         }
                     }
                 })
