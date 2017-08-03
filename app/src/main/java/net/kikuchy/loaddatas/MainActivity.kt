@@ -40,6 +40,10 @@ class MainActivity : LifecycleActivity() {
                 }
             }
         })
-
+        recyclerView.addOnScrollListener(PageEndDetector(object: PageEndDetector.OnReachPageEnd {
+            override fun onReach() {
+                vm.loadNext()
+            }
+        }))
     }
 }

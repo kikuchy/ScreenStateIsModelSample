@@ -16,11 +16,14 @@ import java.net.URI
  * Created by hiroshi.kikuchi on 2017/08/02.
  */
 class StargazerListViewModel : ViewModel() {
-    val state: LiveData<StargazerListModelState> = StargazerListLiveData(
-            StargazerListModel(
-                    StargazerNetworkModel(
-                            StargazerRepository()
-                    )
+    val model = StargazerListModel(
+            StargazerNetworkModel(
+                    StargazerRepository()
             )
     )
+    val state: LiveData<StargazerListModelState> = StargazerListLiveData(model)
+
+    fun loadNext() {
+        model.loadNext()
+    }
 }
