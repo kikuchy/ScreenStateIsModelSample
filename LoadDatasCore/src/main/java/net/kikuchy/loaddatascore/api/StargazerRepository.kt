@@ -3,6 +3,7 @@ package net.kikuchy.loaddatascore.api
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import net.kikuchy.loaddatascore.stargazer.Stargazer
 import okhttp3.*
 import java.io.IOException
@@ -20,7 +21,7 @@ class StargazerRepository : StargazerRepositoryContract {
                 url("https://api.github.com/repos/DroidKaigi/conference-app-2017/stargazers?page=$page").
                 get().
                 build()
-        return Single.create { emitter ->
+        return Single.create<Cursor<List<Stargazer>>> { emitter ->
             client.newCall(request).apply {
                 enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
@@ -52,6 +53,6 @@ class StargazerRepository : StargazerRepositoryContract {
                     }
                 })
             }
-        }
+        }.observeOn(Schedulers.io())
     }
 }

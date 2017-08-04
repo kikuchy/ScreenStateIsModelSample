@@ -37,11 +37,14 @@ class StargazerNetworkModel(
     private fun loadImpl(page: Int) {
         repository.
                 getStargazers(page)
-                .observeOn(Schedulers.computation())
-                .subscribe({ stargazers ->
-                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers)))
-                }, { error ->
-                    stateHolder.onNext(StargazerNetworkModelState.Fetched(Result.Failure(error)))
+                .map { stargazers ->
+                    StargazerNetworkModelState.Fetched(Result.Success(stargazers))
+                }
+                .onErrorReturn { error ->
+                    StargazerNetworkModelState.Fetched(Result.Failure(error))
+                }
+                .subscribe({ state ->
+                    stateHolder.onNext(state)
                 })
     }
 }

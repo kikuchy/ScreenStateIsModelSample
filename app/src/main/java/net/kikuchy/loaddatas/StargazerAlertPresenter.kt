@@ -20,13 +20,16 @@ class StargazerAlertPresenter(private val parentView: View) : Observer<Stargazer
             is StargazerListModelState.Fetched -> {
                 val lastResult = t.lastResult
                 when (lastResult) {
-                    is Result.Failure ->
+                    is Result.Failure -> {
                         Snackbar
                                 .make(parentView, "読み込み中にエラーが起きました", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("再読み込み") {
                                     callback?.invoke()
                                 }
                                 .show()
+                        // for debug
+                        lastResult.error.printStackTrace()
+                    }
                 }
             }
         }

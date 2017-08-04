@@ -3,6 +3,7 @@ package net.kikuchy.loaddatascore.stargazer.list
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import net.kikuchy.loaddatascore.Result
+import net.kikuchy.loaddatascore.api.Cursor
 import net.kikuchy.loaddatascore.stargazer.Stargazer
 import net.kikuchy.loaddatascore.stargazer.network.StargazerNetworkModelContract
 import net.kikuchy.loaddatascore.stargazer.network.StargazerNetworkModelState
@@ -45,7 +46,7 @@ class StargazerListModelTest {
     fun firstFetch() {
         listModel!!.loadNext()
         assertEquals(
-                StargazerListModelState.Fetching(1, Result.Success(emptyList())),
+                StargazerListModelState.Fetching(1, Result.Success(emptyList()), false),
                 listModel!!.stateChanged.blockingFirst()
         )
     }
@@ -57,9 +58,9 @@ class StargazerListModelTest {
                 Stargazer("AAA", URI.create("http://example.com/aaa.png")),
                 Stargazer("BBB", URI.create("http://example.com/bbb.png"))
         )
-        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(stargazers)))
+        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(Cursor(1, 10, stargazers))))
         assertEquals(
-                StargazerListModelState.Fetched(1, Result.Success(stargazers)),
+                StargazerListModelState.Fetched(1, Result.Success(stargazers), false),
                 listModel!!.stateChanged.blockingFirst()
         )
     }
@@ -71,16 +72,16 @@ class StargazerListModelTest {
                 Stargazer("AAA", URI.create("http://example.com/aaa.png")),
                 Stargazer("BBB", URI.create("http://example.com/bbb.png"))
         )
-        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(firstStargazers)))
+        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(Cursor(1, 10, firstStargazers))))
 
         listModel!!.loadNext()
         val secondStargazers = listOf(
                 Stargazer("CCC", URI.create("http://example.com/ccc.png")),
                 Stargazer("DDD", URI.create("http://example.com/ddd.png"))
         )
-        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(secondStargazers)))
+        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(Cursor(2, 10, secondStargazers))))
         assertEquals(
-                StargazerListModelState.Fetched(2, Result.Success(firstStargazers + secondStargazers)),
+                StargazerListModelState.Fetched(2, Result.Success(firstStargazers + secondStargazers), false),
                 listModel!!.stateChanged.blockingFirst()
         )
     }
@@ -92,16 +93,16 @@ class StargazerListModelTest {
                 Stargazer("AAA", URI.create("http://example.com/aaa.png")),
                 Stargazer("BBB", URI.create("http://example.com/bbb.png"))
         )
-        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(firstStargazers)))
+        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(Cursor(1, 10, firstStargazers))))
 
         listModel!!.reload()
         val secondStargazers = listOf(
                 Stargazer("CCC", URI.create("http://example.com/ccc.png")),
                 Stargazer("DDD", URI.create("http://example.com/ddd.png"))
         )
-        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(secondStargazers)))
+        netModel!!.subject.onNext(StargazerNetworkModelState.Fetched(Result.Success(Cursor(1, 10, secondStargazers))))
         assertEquals(
-                StargazerListModelState.Fetched(1, Result.Success(secondStargazers)),
+                StargazerListModelState.Fetched(1, Result.Success(secondStargazers), false),
                 listModel!!.stateChanged.blockingFirst()
         )
     }

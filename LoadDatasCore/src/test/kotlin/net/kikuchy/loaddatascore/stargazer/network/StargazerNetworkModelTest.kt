@@ -1,6 +1,8 @@
 package net.kikuchy.loaddatascore.stargazer.network
 
+import io.reactivex.Observer
 import io.reactivex.Single
+import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.SingleSubject
 import net.kikuchy.loaddatascore.Result
 import net.kikuchy.loaddatascore.api.Cursor
@@ -67,8 +69,8 @@ class StargazerNetworkModelTest {
         )
         repository!!.ret.onSuccess(Cursor(1, 5, stargazers))
         assertEquals(
-                StargazerNetworkModelState.Fetched(Result.Success(stargazers)),
-                model!!.stateChanged.blockingFirst()
+                StargazerNetworkModelState.Fetched(Result.Success(Cursor(1, 5, stargazers))),
+                model!!.stateChanged.filter { it is StargazerNetworkModelState.Fetched }.blockingFirst()
         )
     }
 
@@ -101,7 +103,7 @@ class StargazerNetworkModelTest {
         repository!!.ret.onSuccess(Cursor(2, 5, secondStargazers))
 
         assertEquals(
-                StargazerNetworkModelState.Fetched(Result.Success(secondStargazers)),
+                StargazerNetworkModelState.Fetched(Result.Success(Cursor(2, 5, secondStargazers))),
                 model!!.stateChanged.blockingFirst()
         )
     }
